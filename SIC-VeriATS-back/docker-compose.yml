@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 16 Database
+  #   # PostgreSQL 16 Database (Migrated to Supabase)
+  #   db:
+  #     image: postgres:16-alpine
+  #     container_name: sic_veriats_db
+  #     environment:
+  #       POSTGRES_DB: ${POSTGRES_DB:-veriats}
+  #       POSTGRES_USER: ${POSTGRES_USER:-veriats_user}
+  #       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+  #       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+  #     volumes:
+  #       - postgres_data:/var/lib/postgresql/data
+  #     ports:
+  #       - "5432:5432"
+  #     networks:
+  #       - backend
+  #     healthcheck:
+  #       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-veriats_user} -d ${POSTGRES_DB:-veriats}" ]
+  #       interval: 10s
+  #       timeout: 5s
+  #       retries: 5
+  #       start_period: 10s
+  #     restart: unless-stopped
+
+  #   # Database GUI (Migrated to Supabase Studio)
+  #   pgadmin:
+  #     image: dpage/pgadmin4
+  #     container_name: sic_veriats_pgadmin
+  #     restart: always
+  #     environment:
+  #       PGADMIN_DEFAULT_EMAIL: admin@veriats.com
+  #       PGADMIN_DEFAULT_PASSWORD: admin
+  #     ports:
+  #       - 5050:80
+  #     networks:
+  #       - backend
+  #     depends_on:
+  #       - db
+
+  # FastAPI Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: sic_veriats_api
+    environment:
+      # Database
+      DATABASE_URL: ${DATABASE_URL}
+
+      # JWT
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+
+      # CORS
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:8000}
+
+      # App
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DEBUG: ${DEBUG:-false}
+    ports:
+      - "8000:8000"
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    networks:
+      - backend
+      - frontend
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: false # Set to true in production for better security
+
+volumes:
+  postgres_data:
+    name: sic_veriats_postgres_data
