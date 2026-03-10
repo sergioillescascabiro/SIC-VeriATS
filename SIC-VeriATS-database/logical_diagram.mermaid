@@ -1,0 +1,149 @@
+flowchart TB
+    %% Estilos para simular tablas y agrupaciones
+    classDef table fill:#ffffff,stroke:#64748B,stroke-width:2px,text-align:left,font-family:monospace,color:#1F2937;
+    classDef concept fill:#E8F0FE,stroke:#93C5FD,stroke-width:2px,color:#1F2937,font-weight:bold,stroke-dasharray: 5 5;
+
+    %% =========================================================
+    %% AGRUPACIONES POR CONCEPTOS (Para evitar solapamientos)
+    %% =========================================================
+
+    subgraph SG1 ["1. Gestión de Accesos y Cuentas"]
+        users["`**users**
+        ---
+        UUID id PK
+        VARCHAR email UK
+        user_role role
+        BOOLEAN is_active`"]:::table
+        
+        company_users["`**company_users**
+        ---
+        UUID id PK
+        UUID company_id FK
+        UUID user_id FK
+        VARCHAR role
+        BOOLEAN is_active`"]:::table
+
+        companies["`**companies**
+        ---
+        UUID id PK
+        VARCHAR name
+        TEXT description
+        UUID created_by FK
+        BOOLEAN is_active`"]:::table
+    end
+
+    subgraph SG3 ["2. Perfil del Candidato (CV)"]
+        candidates["`**candidates**
+        ---
+        UUID id PK
+        UUID user_id FK (UK)
+        VARCHAR first_name
+        VARCHAR last_name
+        DECIMAL bchlr_mark
+        DECIMAL mstr_upm
+        DECIMAL mstr_usa
+        VARCHAR add_info`"]:::table
+
+
+
+        candidate_experience["`**candidate_experience**
+        ---
+        UUID id PK
+        UUID candidate_id FK
+        VARCHAR company
+        VARCHAR position
+        DATE start_date
+        DATE end_date
+        BOOLEAN is_current`"]:::table
+    end
+
+    subgraph SG2 ["3. Ofertas y Diccionario de Habilidades"]
+        jobs["`**jobs**
+        ---
+        UUID id PK
+        UUID company_id FK
+        VARCHAR title
+        TEXT description
+        VARCHAR location
+        job_status status`"]:::table
+
+        skills["`**skills**
+        ---
+        UUID id PK
+        VARCHAR name UK
+        TEXT description
+        VARCHAR category
+        skill_status status`"]:::table
+
+        job_skills["`**job_skills**
+        ---
+        UUID id PK
+        UUID job_id FK
+        UUID skill_id FK
+        required_level req_lvl`"]:::table
+    end
+
+    subgraph SG4 ["4. Proceso de Selección y Candidaturas"]
+        applications["`**applications**
+        ---
+        UUID id PK
+        UUID candidate_id FK
+        UUID job_id FK
+        doc_type resume_used
+        app_status status
+        TIMESTAMPTZ applied_at`"]:::table
+
+        application_skills["`**application_skills**
+        ---
+        UUID id PK
+        UUID application_id FK
+        UUID skill_id FK
+        cand_level level
+        admin_state state`"]:::table
+
+        interviews["`**interviews**
+        ---
+        UUID id PK
+        UUID application_id FK
+        TIMESTAMP date
+        interview_mode mode
+        interview_status status`"]:::table
+
+        selected_candidates["`**selected_candidates**
+        ---
+        UUID id PK
+        UUID application_id FK (UK)
+        UUID job_id FK
+        UUID candidate_id FK
+        TEXT final_decision`"]:::table
+    end
+
+    %% Aplicar el estilo a los subgrafos (Cajas separadoras)
+    class SG1,SG2,SG3,SG4 concept;
+
+    %% =========================================================
+    %% RELACIONES (Flechas)
+    %% En Flowchart, estas líneas son elásticas. 
+    %% =========================================================
+    
+    users -->|1..N| company_users
+    companies -->|1..N| company_users
+    users -->|1..1| candidates
+    companies -->|1..N| jobs
+    
+
+    candidates -->|1..N| candidate_experience
+    
+    jobs -->|1..N| job_skills
+    skills -->|1..N| job_skills
+    
+    candidates -->|1..N| applications
+    jobs -->|1..N| applications
+    
+    applications -->|1..N| application_skills
+    skills -->|1..N| application_skills
+    
+    applications -->|1..N| interviews
+    applications -->|1..1| selected_candidates
+    jobs -->|1..N| selected_candidates
+    candidates -->|1..N| selected_candidates

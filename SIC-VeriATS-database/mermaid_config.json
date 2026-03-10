@@ -1,0 +1,13 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "background": "#FFFFFF",
+    "primaryColor": "#E8F0FE",
+    "primaryTextColor": "#1F2937",
+    "primaryBorderColor": "#93C5FD",
+    "lineColor": "#64748B",
+    "fontSize": "14px",
+    "edgeLabelBackground": "#FFFFFF",
+    "strokeWidth": "3px"
+  }
+}

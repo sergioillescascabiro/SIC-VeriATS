@@ -1,0 +1,40 @@
+flowchart LR
+    %% Título
+    classDef title fill:none,stroke:none,font-weight:bold,font-size:24px;
+    Title[Modelo Conceptual de Datos - VeriATS]:::title
+    
+    %% Estilos de Nodos para Notación Chen (Antigua)
+    classDef entity fill:#cce5ff,stroke:#005cbf,stroke-width:2px;
+    classDef relation fill:#e2e3e5,stroke:#383d41,stroke-width:2px,shape:rhombus;
+    
+    %% Entidades (Rectángulos)
+    User[Usuario]:::entity
+    Candidate[Candidato]:::entity
+    Company[Empresa]:::entity
+    Job[Oferta de Empleo]:::entity
+    Skill[Habilidad]:::entity
+    Application[Candidatura]:::entity
+    Interview[Entrevista]:::entity
+    
+    %% Relaciones (Rombos)
+    RelManage{Gestiona}:::relation
+    RelIs{Es un}:::relation
+    RelPost{Publica}:::relation
+    RelRequire{Requiere}:::relation
+    RelApply{Genera}:::relation
+    RelTarget{Aplica a}:::relation
+    RelDeclares{Justifica}:::relation
+    RelHasInterview{Tiene programada}:::relation
+    
+    %% Conexiones con Cardinalidad
+    User ---|N| RelManage ---|M| Company
+    User ---|1| RelIs ---|1| Candidate
+    Company ---|1| RelPost ---|N| Job
+    
+    Job ---|N| RelRequire ---|M| Skill
+    
+    Candidate ---|1| RelApply ---|N| Application
+    Job ---|1| RelTarget ---|N| Application
+    
+    Application ---|N| RelDeclares ---|M| Skill
+    Application ---|1| RelHasInterview ---|N| Interview
