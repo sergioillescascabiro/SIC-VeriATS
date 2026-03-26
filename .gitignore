@@ -1,0 +1,48 @@
+# ─── Environment ───────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ─── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# ─── Node / Frontend ───────────────────────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# ─── Uploads & generated files ─────────────────────────────────────────────────
+SIC-VeriATS-back/uploads/
+SIC-VeriATS-back/alembic/versions/__pycache__/
+
+# ─── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+*.suo
+*.user
+
+# ─── Unrelated projects in this workspace ──────────────────────────────────────
+awesome-claude-code/
+skills/
+.agent/
+.claude/
