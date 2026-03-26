@@ -31,6 +31,19 @@ dist/
 SIC-VeriATS-back/uploads/
 SIC-VeriATS-back/alembic/versions/__pycache__/
 
+# ─── Debug & output files (never commit these) ─────────────────────────────────
+SIC-VeriATS-back/supabase_status.json
+SIC-VeriATS-back/api_logs.txt
+SIC-VeriATS-back/debug_output.txt
+SIC-VeriATS-back/init_db_out.txt
+SIC-VeriATS-back/seed_output.txt
+SIC-VeriATS-back/table_info.txt
+SIC-VeriATS-back/debug_settings.py
+SIC-VeriATS-back/check_syntax.py
+SIC-VeriATS-back/backup_veriats.*
+SIC-VeriATS-back/openapi_*.json
+SIC-VeriATS-front/test-supabase.html
+
 # ─── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
